@@ -14,28 +14,30 @@
  *   Exercise1.vue
  *   Exercise2.vue
  *   Exercise3.vue
- * 
+ *
  * You would usually import all three and then register them.
  * We can avoid the hassle by leveraging dynamic import(), that
  * provide us with code splitting for free. ❤ webpack.
  */
-  
+
 export default {
   name: 'App',
-  data () {
+  data() {
     return {
       exercise: 1, // Load first exercise by default
-    }
+    };
   },
   computed: {
-    componentConstructor () {
-      // `is` prop can take a component's name as a value,
-      // but also a component's options object.
-      const path = `./components/Exercise${this.exercise}`
-      return () => import(path)
-    }
-  }
-}
+    componentConstructor() {
+      // Little gotcha: We need to access to `this.exercise` outside of the
+      // import function to make sure Vue's reactivity system works properly.
+      const path = `./components/Exercise${this.exercise}`;
+
+      // We need a template literal to make the dynamic import work!
+      return () => import(`${path}`);
+    },
+  },
+};
 </script>
 
 <style>
